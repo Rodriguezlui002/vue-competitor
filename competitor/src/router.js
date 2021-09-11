@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import Landing from './pages/Landing.vue';
+import About from './pages/About.vue';
 import SignUp from './pages/SignUp.vue';
 import Login from './pages/Login.vue';
 import Dashboard from './pages/Dashboard.vue';
@@ -11,6 +12,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         { path: '/', component: Landing},
+        { path: '/about', component: About },
         { path: '/signup', component: SignUp },
         { path: '/login', component: Login },
         { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } },
