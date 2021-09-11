@@ -10,18 +10,19 @@
             <div v-show="windowWidth >= 625" class="flex space-x-6">
                 <router-link class="font-semibold text-xl" to="/">Home</router-link>
                 <router-link class="font-semibold text-xl" to="/about">About</router-link>
-                <router-link class="font-semibold text-xl" to="/signup">Sign Up</router-link>
-                <router-link class="font-semibold text-xl" to="/login">Login</router-link>
-                <!-- <router-link class="font-semibold text-xl" to="/dashboard">Dashboard</router-link> -->
+                <router-link v-if="!isLogged" class="font-semibold text-xl" to="/signup">Sign Up</router-link>
+                <router-link v-if="!isLogged" class="font-semibold text-xl" to="/login">Login</router-link>
+                <router-link v-if="isLogged" class="font-semibold text-xl" to="/dashboard">Dashboard</router-link>
+                <button v-if="isLogged" class="font-semibold text-xl" @click="logOut">Logout</button>
             </div>
         </header>
-        <div v-show="windowWidth < 625 && showMenu" class="fixed inset-x-0 top-28 mx-auto w-max h-auto flex flex-col space-y-6 px-24 py-6 rounded bg-red-600 text-gray-100 text-center font-bold text-xl">
-            <h3>{{ windowWidth }}</h3>
+        <div v-show="windowWidth < 625 && showMenu" class="fixed inset-x-0 top-28 mx-auto w-max h-auto flex flex-col space-y-6 px-24 py-6 rounded bg-primary text-gray-100 text-center font-bold text-xl">
             <router-link @click="toggleMenu" to="/">Home</router-link>
             <router-link @click="toggleMenu" to="/about">About</router-link>
-            <router-link @click="toggleMenu" to="/signup">Sign Up</router-link>
-            <router-link @click="toggleMenu" to="/login">Login</router-link>
-            <!-- <router-link @click="toggleMenu" to="/dashboard">Dashboard</router-link> -->
+            <router-link v-if="!isLogged" @click="toggleMenu" to="/signup">Sign Up</router-link>
+            <router-link v-if="!isLogged" @click="toggleMenu" to="/login">Login</router-link>
+            <router-link v-if="isLogged" @click="toggleMenu" to="/dashboard">Dashboard</router-link>
+            <button v-if="isLogged" @click="logOut" >Logout</button>
         </div>
     </div>
 </template>
@@ -31,7 +32,12 @@ export default {
     data() {
         return {
             windowWidth: window.innerWidth,
-            showMenu: false
+            showMenu: false,
+        }
+    },
+    computed: {
+        isLogged() {
+            return this.$store.getters.isAuthenticated
         }
     },
     mounted() {
@@ -42,6 +48,13 @@ export default {
     methods: {
         toggleMenu() {
             this.showMenu = !this.showMenu;
+        },
+        logOut() {
+            if (this.showMenu) {
+                this.showMenu = !this.showMenu;
+            }
+            this.$store.dispatch('logout');
+            this.$router.replace('/');
         }
     }
 }

@@ -13,8 +13,8 @@ const router = createRouter({
     routes: [
         { path: '/', component: Landing},
         { path: '/about', component: About },
-        { path: '/signup', component: SignUp },
-        { path: '/login', component: Login },
+        { path: '/signup', component: SignUp, meta: { requiresUnauth: true } },
+        { path: '/login', component: Login, meta: { requiresUnauth: true } },
         { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } },
         { path: '/:notFound(.*)', component: NotFound }
     ],
@@ -23,6 +23,8 @@ const router = createRouter({
 router.beforeEach(function(to, _, next) {
     if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
         next('/');
+    } else if (to.meta.requiresUnauth && store.getters.isAuthenticated) {
+        next('/dashboard');
     } else {
         next();
     }
