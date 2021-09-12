@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .h-full-view {
+        height: calc(100vh - 10rem);
+    }
+}
